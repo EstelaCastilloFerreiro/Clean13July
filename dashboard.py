@@ -1912,26 +1912,25 @@ def mostrar_dashboard(df_productos, df_traspasos, df_ventas, seccion):
                 
                 if not mejor.empty and not peor.empty:
                     try:
-                        # Usar componentes nativos de Streamlit en lugar de HTML
-                        st.subheader(zona)
-                        
-                        col_mejor, col_peor = st.columns(2)
-                        
-                        with col_mejor:
-                            st.metric(
-                                label="Mejor Tienda",
-                                value=mejor.iloc[0]['Tienda'],
-                                delta=f"{mejor.iloc[0]['Cantidad']:,.0f} uds • {mejor.iloc[0]['Beneficio']:,.2f}€"
-                            )
-                        
-                        with col_peor:
-                            st.metric(
-                                label="Peor Tienda", 
-                                value=peor.iloc[0]['Tienda'],
-                                delta=f"{peor.iloc[0]['Cantidad']:,.0f} uds • {peor.iloc[0]['Beneficio']:,.2f}€ • {peor.iloc[0]['%_vs_Media']}% vs media"
-                            )
-                        
-                        st.divider()
+                        st.markdown(f"""
+                        <div class="kpi-group">
+                            <div class="kpi-group-title">{zona}</div>
+                            <div class="kpi-row">
+                                <div class="kpi-item">
+                                    <p class="small-font">Mejor Tienda</p>
+                                    <p class="metric-value">{mejor.iloc[0]['Tienda']}</p>
+                                    <p class="small-font">{mejor.iloc[0]['Cantidad']:,.0f} uds</p>
+                                    <p class="small-font" style="color:#059669;">{mejor.iloc[0]['Beneficio']:,.2f}€</p>
+                                </div>
+                                <div class="kpi-item">
+                                    <p class="small-font">Peor Tienda</p>
+                                    <p class="metric-value">{peor.iloc[0]['Tienda']}</p>
+                                    <p class="small-font">{peor.iloc[0]['Cantidad']:,.0f} uds ({peor.iloc[0]['%_vs_Media']}% vs media)</p>
+                                    <p class="small-font" style="color:#dc2626;">{peor.iloc[0]['Beneficio']:,.2f}€</p>
+                                </div>
+                            </div>
+                        </div>
+                        """, unsafe_allow_html=True)
                     except Exception as e:
                         st.error(f"Error al mostrar KPIs para {zona}: {str(e)}")
                 else:
